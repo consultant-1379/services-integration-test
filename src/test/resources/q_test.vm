@@ -1,0 +1,11 @@
+##=============================================================================
+## simple test template
+##=============================================================================
+select
+    ${columns}
+from
+    ${table}
+where 
+    EVENT_TIME between :dateFrom and :dateTo
+group by
+    ${columns}

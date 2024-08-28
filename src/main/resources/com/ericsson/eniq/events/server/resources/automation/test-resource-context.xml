@@ -1,0 +1,42 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.0.xsd
+						http://www.springframework.org/schema/jee
+						http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+
+    <bean id="terminalAndGroupAnalysisResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.TerminalAndGroupAnalysisResource"/>
+
+    <bean id="subsessionBIResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.SubsessionBIResource"/>
+
+    <bean id="eventRecurringResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.EventRecurringResource"/>
+
+    <bean id="qosStatisticsResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.QOSStatisticsResource"/>
+
+    <bean id="kpiResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.KPIResource"/>
+
+    <bean id="eventVolumeResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.EventVolumeResource"/>
+
+    <bean id="causeCodeAnalysisResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.CauseCodeAnalysisResource"/>
+
+    <bean id="causeCodeTablesCCResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.CauseCodeTablesCCResource"/>
+
+    <bean id="causeCodeTablesSCCResource" parent="baseResource"
+          class="com.ericsson.eniq.events.server.resources.CauseCodeTablesSCCResource"/>
+
+</beans>

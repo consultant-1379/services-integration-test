@@ -1,0 +1,289 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.0.xsd
+						http://www.springframework.org/schema/jee
+						http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/com/ericsson/eniq/events/server/test/jdbc.properties"/>
+    </bean>
+
+    <bean id="jsonAssertUtils" class="com.ericsson.eniq.events.server.test.util.JSONAssertUtils"/>
+
+    <bean id="dwhDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id="dwhrepDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${dwhrep.jdbc.driverClassName}"/>
+        <property name="url" value="${dwhrep.jdbc.url}"/>
+        <property name="username" value="${dwhrep.jdbc.username}"/>
+        <property name="password" value="${dwhrep.jdbc.password}"/>
+    </bean>
+
+    <bean id="eniqEventsPropertiesBean" name="Eniq_Event_Properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="ENIQ_EVENTS_DEFAULT_DATA_SOURCE">dwhrep/jdbc/eniqPool</prop>
+                <prop key="ENIQ_EVENTS_MAX_JSON_RESULT_SIZE">500</prop>
+                <prop key="ENIQ_EVENTS_USE_LOAD_BALANCING_POLICIES">true</prop>
+                <prop key="ENIQ_EVENTS_EXPORT_CSV_DATA_SOURCE">jdbc/dwh_reader_export_csv</prop>
+                <prop key="FEATURE_DESCRIPTION_FILE_LOCATION">feature_descriptions</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="jndiPropertiesForTest" class="com.ericsson.eniq.events.server.test.JNDIPropertiesForTest" init-method="setUpJNDIPropertiesForTest">
+        <property name="dwhDataSource" ref="dwhDataSource"/>
+        <property name="eniqEventsProperties" ref="eniqEventsPropertiesBean"/>
+    </bean>
+
+    <bean id="amxPropertyReader" class="com.ericsson.eniq.events.server.utils.config.AMXPropertyReader"/>
+
+    <bean id="dataSourceManager" class="com.ericsson.eniq.events.server.datasource.DataSourceManager">
+        <property name="eniqEventsProperties" ref="eniqEventsPropertiesBean"/>
+        <property name="amxPropertyReader" ref="amxPropertyReader"/>
+    </bean>
+
+    <bean id="dbConnectionManager" class="com.ericsson.eniq.events.server.datasource.DBConnectionManager">
+        <property name="dwhrepDataSource" ref="dwhrepDataSource"/>
+        <property name="dataSourceManager" ref="dataSourceManager"/>
+    </bean>
+
+    <bean id="loadBalancingPolicyFactory" class="com.ericsson.eniq.events.server.datasource.loadbalancing.LoadBalancingPolicyFactoryImpl">
+    </bean>
+
+
+    <bean id="dataServiceQueryExecutor" class="com.ericsson.eniq.events.server.query.DataServiceQueryExecutor">
+        <property name="dbConnectionManager" ref="dbConnectionManager"/>
+        <property name="requestIdMappings" ref="requestIdMappingService"/>
+    </bean>
+
+    <bean id="groupDataService" class="com.ericsson.eniq.events.server.services.impl.GroupDataService" init-method="createGroupCache">
+        <property name="dbConnectionManager" ref="dbConnectionManager"/>
+    </bean>
+
+    <bean id="ratDescriptionMappingUtils" class="com.ericsson.eniq.events.server.test.stubs.StubbedRATDescriptionMappingUtils"/>
+
+    <bean id="dataServiceBean" lazy-init="true" class="com.ericsson.eniq.events.server.services.impl.DataServiceBean">
+        <property name="dataServiceQueryExecutor" ref="dataServiceQueryExecutor"/>
+        <property name="loadBalancingPolicyFactory" ref="loadBalancingPolicyFactory"/>
+        <property name="ratDescriptionMappingUtils" ref="ratDescriptionMappingUtils"/>
+        <property name="groupDataService" ref="groupDataService"/>
+    </bean>
+
+    <bean id="propertyStore" class="com.ericsson.eniq.events.server.utils.config.PropertyStore"/>
+
+    <bean id="techPackTechnologies" class="com.ericsson.eniq.events.server.utils.config.latency.TechPackTechnologies" init-method="readTechPackDefinitionsFile"/>
+
+    <bean id="latencyPropertyDefaultValuesAndLimits" class="com.ericsson.eniq.events.server.utils.config.latency.LatencyPropertyDefaultValuesAndLimits" init-method="readDefaultValuesFromFile">
+    </bean>
+
+    <bean id="latencySettings" class="com.ericsson.eniq.events.server.utils.config.latency.LatencySettings">
+        <property name="latencyPropertyDefaultValuesAndLimits" ref="latencyPropertyDefaultValuesAndLimits"/>
+        <property name="propertyStore" ref="propertyStore"/>
+        <property name="techPackTechnologies" ref="techPackTechnologies"/>
+    </bean>
+
+    <bean id="applicationConfigManager" class="com.ericsson.eniq.events.server.utils.config.ApplicationConfigManagerImpl">
+        <property name="propertyStore" ref="propertyStore"/>
+        <property name="latencySettings" ref="latencySettings"/>
+    </bean>
+
+    <bean id="requestIdMappingService" class="com.ericsson.eniq.events.server.query.RequestIdMappingService" init-method="getTimeOutInMillis" destroy-method="clearMap">
+        <property name="applicationManager" ref="applicationConfigManager"/>
+    </bean>
+
+    <bean id="streamingDataService" class="com.ericsson.eniq.events.server.services.impl.StreamingDataServiceImpl">
+        <property name="dbConnectionManager" ref="dbConnectionManager"/>
+        <property name="loadBalancingPolicyFactory" ref="loadBalancingPolicyFactory"/>
+    </bean>
+    
+    <bean id="fileOperations" class="com.ericsson.eniq.events.server.test.stubs.StubbedFileOperations"/>
+
+    <bean id="templateMappingEngine" class="com.ericsson.eniq.events.server.templates.mappingengine.TemplateMappingEngine"  init-method="applicationStartup" destroy-method="applicationShutdown">
+    	<property name="fileOperations" ref="fileOperations"/>
+    </bean>
+
+    <bean id="templateUtils" class="com.ericsson.eniq.events.server.templates.utils.TemplateUtils" init-method="applicationStartup" destroy-method="applicationShutdown"/>
+
+    <bean id="rmiEngineUtils" class="com.ericsson.eniq.events.server.test.RMIEngineUtilsForIntegrationTests"/>
+
+    <bean id="RATDescriptionMappingsService" class="com.ericsson.eniq.events.server.services.impl.RATDescriptionMappingsService">
+        <property name="templateUtils" ref="templateUtils"/>
+        <property name="dataService" ref="dataServiceBean"/>
+    </bean>
+
+    <bean id="hashUtilities" class="com.ericsson.eniq.events.server.utils.HashUtilities">
+        <property name="ratDescriptionMappingUtils" ref="ratDescriptionMappingUtils"/>
+    </bean>
+
+    <bean id="queryUtils" class="com.ericsson.eniq.events.server.utils.QueryUtils">
+        <property name="ratDescriptionMappingUtils" ref="ratDescriptionMappingUtils"/>
+        <property name="parameterChecker" ref="parameterChecker"/>
+        <property name="hashUtilities" ref="hashUtilities"/>
+        <property name="applicationConfigManager" ref="applicationConfigManager" />
+    </bean>
+    <bean id="kpiUtilities" class="com.ericsson.eniq.events.server.kpi.KpiUtilities" init-method="applicationStartup" destroy-method="applicationShutdown">
+        <property name="templateUtils" ref="templateUtils"/>
+    </bean>
+
+
+    <bean id="sgehAttachSuccessRateKPI" name="SGEHAttachSuccessRateKPI" class="com.ericsson.eniq.events.server.kpi.sgeh.impl.SGEHAttachSuccessRateKPI" init-method="init">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+    </bean>
+
+    <bean id="pdpContextCutoffRatioKPI" name="PDPContextCutoffRatioKPI" class="com.ericsson.eniq.events.server.kpi.sgeh.impl.SGEHAttachSuccessRateKPI" init-method="init">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+    </bean>
+
+    <bean id="pdpContextActivationSuccessRateKPI" name="PDPContextActivationSuccessRateKPI" class="com.ericsson.eniq.events.server.kpi.sgeh.impl.SGEHAttachSuccessRateKPI" init-method="init">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+    </bean>
+
+    <bean id="sgehPagingFailureRatioKPI" name="SGEHPagingFailureRatioKPI" class="com.ericsson.eniq.events.server.kpi.sgeh.impl.SGEHAttachSuccessRateKPI" init-method="init">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+    </bean>
+
+    <bean id="kpiFactory" class="com.ericsson.eniq.events.server.kpi.KpiFactory">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+        <property name="sgehAttachSuccessRateKPI" ref="sgehAttachSuccessRateKPI"/>
+    </bean>
+
+    <bean id="lteQueryBuilder" class="com.ericsson.eniq.events.server.kpi.KPIQueryfactory">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+        <property name="kpiFactory" ref="kpiFactory"/>
+    </bean>
+
+    <bean id="mssQueryFactoryHelper" class="com.ericsson.eniq.events.server.kpi.MssKpiQueryFactoryHelper">
+        <property name="kpiUtilities" ref="kpiUtilities"/>
+        <property name="kpiFactory" ref="kpiFactory"/>
+    </bean>
+
+
+    <!--  command object to encapsulate query execution tests -->
+    <bean id="queryCommand" scope="prototype" class="com.ericsson.eniq.events.server.test.QueryCommand">
+        <property name="templateUtils" ref="templateUtils"/>
+        <property name="dataServiceBean" ref="dataServiceBean"/>
+    </bean>
+
+
+    <bean id="servicePerformanceTraceLogger" class="com.ericsson.eniq.events.server.test.stubs.DummyServicePerformanceTraceLogger">
+    </bean>
+
+    <bean id="servicesAuditLogger" class="com.ericsson.eniq.events.server.test.stubs.DummyServicesAuditLogger">
+    </bean>
+    
+    <bean id="sessionContext"
+		class="com.ericsson.eniq.events.server.test.stubs.DummySessionContext">
+	</bean>
+
+    <bean id="auditService" class="com.ericsson.eniq.events.server.utils.AuditService">
+        <property name="servicesAuditLogger" ref="servicesAuditLogger"/>
+        <property name="sessionContext" ref="sessionContext"/> 
+    </bean>
+
+    <bean id="mediaTypeHandler" class="com.ericsson.eniq.events.server.utils.MediaTypeHandler"/>
+
+    <bean id="loadBalancingPolicyService" class="com.ericsson.eniq.events.server.utils.LoadBalancingPolicyService">
+        <property name="loadBalancingPolicyFactory" ref="loadBalancingPolicyFactory"/>
+    </bean>
+
+    <bean id="csvResponseBuilder" class="com.ericsson.eniq.events.server.utils.CSVResponseBuilder"/>
+
+    <bean id="rawTableFetcher" class="com.ericsson.eniq.events.server.utils.techpacks.RawTableFetcher">        
+        <property name="rmiEngineUtils" ref="rmiEngineUtils"/>        
+    </bean>
+
+    <bean id="techPackTableFactory" class="com.ericsson.eniq.events.server.utils.techpacks.TechPackListFactory">
+        <property name="dateTimeHelper" ref="dateTimeHelper"/>
+        <property name="rawTableFetcher" ref="rawTableFetcher"/>
+        <property name="techPackLicensingService" ref="techPackLicensingService"/>
+        <property name="applicationConfigManager" ref="applicationConfigManager" />
+    </bean>
+
+
+    <bean id="baseResource" abstract="true" class="com.ericsson.eniq.events.server.resources.BaseResource">
+        <property name="dataService" ref="dataServiceBean"/>
+        <property name="applicationConfigManager" ref="applicationConfigManager"/>
+        <property name="queryUtils" ref="queryUtils"/>
+        <property name="templateUtils" ref="templateUtils"/>
+        <property name="loadBalancingPolicyService" ref="loadBalancingPolicyService"/>
+        <property name="uriInfo" ref="dummyUri"/>
+        <property name="templateMappingEngine" ref="templateMappingEngine"/>
+        <property name="httpHeaders">
+            <bean class="com.ericsson.eniq.events.server.test.stubs.DummyHttpHeaders"/>
+        </property>
+    </bean>
+
+    <bean id="dummyUri" class="com.ericsson.eniq.events.server.test.stubs.DummyUriInfoImpl">
+        <constructor-arg type="javax.ws.rs.core.MultivaluedMap">
+            <null/>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String" value="baseURI"/>
+        <constructor-arg type="java.lang.String" value="somePath"/>
+    </bean>
+
+    <bean id="dateTimeWhiteList" class="com.ericsson.eniq.events.server.utils.datetime.DateTimeWhiteList" init-method="applicationStartup"/>
+
+    <bean id="dateTimeHelper" class="com.ericsson.eniq.events.server.utils.datetime.DateTimeHelper">
+        <property name="applicationConfigManager" ref="applicationConfigManager"/>
+    </bean>
+
+    <bean id="techPackLicensingService" class="com.ericsson.eniq.events.server.test.stubs.StubbedTechPackLicensingService">
+    </bean>
+
+    <bean id="licensingService" class="com.ericsson.eniq.events.server.test.stubs.StubbedLicensingService"/>
+
+    <bean id="techPackCXCMappingService" class="com.ericsson.eniq.events.server.services.impl.TechPackCXCMappingService" init-method="readTechPackLicenseNumbersFromDB">
+    	<property name="templateMappingEngine" ref="templateMappingEngine" />
+		<property name="templateUtils" ref="templateUtils" />
+		<property name="dataService" ref="dataServiceBean" />
+		<property name="techPackCXCMappingUtils" ref="techPackCXCMappingUtils" />
+    </bean>
+
+
+    <bean id="RoundRobinLoadBalancingPolicy" class="com.ericsson.eniq.events.server.datasource.loadbalancing.RoundRobinLoadBalancingPolicy"/>
+
+    <bean id="NoLoadBalancingPolicy" class="com.ericsson.eniq.events.server.datasource.loadbalancing.NoLoadBalancingPolicy"/>
+
+    <bean id="WeightedRoundRobinLoadBalancingPolicy" class="com.ericsson.eniq.events.server.datasource.loadbalancing.WeightedRoundRobinLoadBalancingPolicy"/>
+
+    <bean id="techPackCXCMappingUtils" class="com.ericsson.eniq.events.server.utils.techpacks.TechPackCXCMappingUtils"/>
+
+    <bean id="techPackDescriptionMappingsService" class="com.ericsson.eniq.events.server.utils.techpacks.TechPackDescriptionMappingsService">
+        <property name="techPackCXCMappingUtils" ref="techPackCXCMappingUtils"/>
+    </bean>
+
+    <bean id="parameterChecker" class="com.ericsson.eniq.events.server.utils.parameterchecking.ParameterChecker"/>
+
+
+    <bean id="exclusiveTACHandler" class="com.ericsson.eniq.events.server.services.exclusivetacs.ExclusiveTACHandler">
+        <property name="templateUtils" ref="templateUtils"/>
+        <property name="templateMappingEngine" ref="templateMappingEngine"/>
+        <property name="queryUtils" ref="queryUtils"/>
+        <property name="dataService" ref="dataServiceBean"/>
+    </bean>
+    
+    <bean id="timerangeQuerier" class="com.ericsson.eniq.events.server.utils.techpacks.timerangequeries.impl.EventsTechPackTimerangeQuerier">
+    </bean>
+    
+    <bean id="timerangeQuerierFactory" class="com.ericsson.eniq.events.server.utils.techpacks.timerangequeries.TimerangeQuerierFactory"/>
+ 	
+ 	<bean id="timeRangeSelector" class="com.ericsson.eniq.events.server.query.TimeRangeSelector"/>
+ 	    	
+ 	<bean id="dataTieringHandler" class="com.ericsson.eniq.events.server.services.datatiering.DataTieringHandler">
+		<property name="applicationConfigManager" ref="applicationConfigManager"/>
+	</bean>
+</beans>

@@ -1,0 +1,241 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:util="http://www.springframework.org/schema/util" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util-3.0.xsd
+						http://www.springframework.org/schema/jee
+						http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+
+    <bean id="multipleRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.ranking.MultipleRankingService"/>
+
+    <bean id="eventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.eventanalysis.EventAnalysisService"/>
+          
+    <bean id="lteHandoverFailureSubscriberEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureSubscriberEventSummaryService"/>
+
+    <bean id="lteHandoverFailureEventHandoverStageService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureEventHandoverStageService"/>
+
+    <bean id="lteHandoverFailureSubscriberDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureSubscriberDetailedEAService"/>
+
+    <bean id="lteHandoverFailureSubscriberERABDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureSubscriberERABDEAService"/>
+
+    <bean id="lteHandoverFailureEnodeBEventHandoverStageService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureEnodeBEventHOStageService"/>
+
+    <bean id="lteHandoverFailureEnodeBEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureENodeBEventSummaryService"/>
+
+    <bean id="lteHandoverFailureEnodeBDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureENodeBDetailedEAService"/>
+
+    <bean id="lteHandoverFailureSubscriberExecRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureSubscriberExecRankingService"/>
+
+    <bean id="lteHandoverFailureSubscriberPrepRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureSubscriberPrepRankingService"/>
+          
+    <bean id ="lteHandoverFailureEnodeBExecRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureEnodeBExecRankingService"/>
+          
+    <bean id ="lteHandoverFailureEnodeBPrepRankingService" parent="genericService"
+    	  class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureEnodeBPrepRankingService"/>
+    	  
+     <bean id ="lteHandoverFailureSourceCellExecRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureSourceCellExecRankingService"/>
+             	  
+    <bean id ="lteHandoverFailureSourceCellPrepRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureSourceCellPrepRankingService"/>
+          
+    <bean id ="lteHandoverFailureTargetCellExecRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureTargetCellExecRankingService"/>
+          
+    <bean id ="lteHandoverFailureTargetCellPrepRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.ranking.LTEHandoverFailureTargetCellPrepRankingService"/>                                 	  
+    	  
+    <bean id="lteHandoverFailureEcellHandoverStageService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureECellHandoverStageService"/>
+
+    <bean id="lteHandoverFailureEcellEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureECellEventSummaryService"/>
+
+    <bean id="lteHandoverFailureECellDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureECellDetailedEAService"/>
+
+    <bean id="lteHandoverFailureECellGroupDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.eventanalysis.LTEHandoverFailureECellGroupDetailedEAService"/>
+          
+    <bean id ="lteHandoverFailureEcellCauseCodeListService" parent ="genericService"
+	      class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHandoverFailureEcellCauseCodeListService"/>
+		  		  
+	<bean id ="lteHandoverFailureEcellCauseCodePieChartService" parent ="genericService"
+		  class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHandoverFailureEcellCauseCodePieChartService"/>
+		  
+	<bean id ="lteHandoverFailureEcellCauseCodeSummaryService" parent ="genericService"
+		  class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHandoverFailureEcellCauseCodeSummaryService"/>
+
+    <bean id="lteHandoverFailureEcellCauseCodeDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHFAEcellCCDetEventAnalysisService"/>
+
+	<bean id="lteHandoverFailureEnodeBCauseCodeEventSummaryService" parent="genericService" 
+          class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHFAEnodeBCCEventSummaryService"/>
+
+	<bean id ="lteHandoverFailureEnodeBCauseCodeDetailedEventAnalysisService" parent ="genericService"
+		  class ="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHFAEnodeBCCDetEventAnalysisService"/>
+	    
+    <bean id ="lteHandoverFailureEnodeBCauseCodeListService" parent ="genericService"
+          class = "com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHandoverFailureEnodeBCauseCodeListService"/>
+          
+    <bean id="lteHFAEnodeBCauseCodePieChartService" parent="genericService"
+	      class="com.ericsson.eniq.events.server.serviceprovider.impl.lte.hfa.causecodeanalysis.LTEHandoverFailureEnodeBCauseCodePieChartService"/>
+	  
+    <bean id="terminalAnalysisSOHOFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalanalysis.TerminalAnalysisSOHOFailureService"/>
+
+    <bean id="terminalAnalysisHSDSCHFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalanalysis.TerminalAnalysisHSDSCHFailureService"/>
+
+    <bean id="terminalAnalysisIRATFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalanalysis.TerminalAnalysisIRATFailureService"/>
+
+    <bean id="terminalAnalysisIFHOFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalanalysis.TerminalAnalysisIFHOFailureService"/>
+
+    <bean id="terminalGroupAnalysisSOHOFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalgroupanalysis.TerminalGASOHOFailureService"/>
+
+    <bean id="terminalGroupAnalysisHSDSCHFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalgroupanalysis.TerminalGAHSDSCHFailureService"/>
+
+    <bean id="terminalGroupAnalysisIRATFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalgroupanalysis.TerminalGAIRATFailureService"/>
+
+    <bean id="terminalGroupAnalysisIFHOFailureService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.terminalgroupanalysis.TerminalGAIFHOFailureService"/>
+
+    <bean id="rncHandoverFailureEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.RNCHandoverFailureEventSummaryService"/>
+
+    <bean id="cellHandoverFailureNetworkEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.CellHandoverFailureNetworkEAService"/>
+
+    <bean id="sourceCellHandoverFailureEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.SourceCellHandoverFailureEventSummaryService"/>
+
+    <bean id="targetCellHandoverFailureRankingService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.ranking.TargetCellHandoverFailureRankingService"/>
+
+    <bean id="targetCellHandoverFailureEventSummaryService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TargetCellHandoverFailureEventSummaryService"/>
+
+    <bean id="rncSOHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.RNCSOHOHandoverFailureDetailedEAService"/>
+
+    <bean id="rncIFHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.RNCIFHOHandoverFailureDetailedEAService"/>
+
+    <bean id="rncIRATHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.RNCIRATHandoverFailureDetailedEAService"/>
+
+    <bean id="rncHSDSCHHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.RNCHSDSCHHandoverFailureDetailedEAService"/>
+
+    <bean id="sourceCellSOHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.SourceCellSOHOHandoverFailureDEAService"/>
+
+    <bean id="sourceCellIFHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.SourceCellIFHOHandoverFailureDEAService"/>
+
+    <bean id="sourceCellIRATHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.SourceCellIRATHandoverFailureDEAService"/>
+
+    <bean id="sourceCellHSDSCHHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.SourceCellHSDSCHHandoverFailureDEAService"/>
+
+    <bean id="targetCellSOHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TargetCellSOHOHandoverFailureDEAService"/>
+
+    <bean id="targetCellIFHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TargetCellIFHOHandoverFailureDEAService"/>
+
+    <bean id="targetCellIRATHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TargetCellIRATHandoverFailureDEAService"/>
+
+    <bean id="targetCellHSDSCHHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TargetCellHSDSCHHandoverFailureDEAService"/>
+
+    <bean id="tacSOHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TACSOHOHandoverFailureDetailedEAService"/>
+
+    <bean id="tacIFHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TACIFHOHandoverFailureDetailedEAService"/>
+
+    <bean id="tacIRATHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TACIRATHandoverFailureDetailedEAService"/>
+
+    <bean id="tacHSDSCHHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.TACHSDSCHHandoverFailureDetailedEAService"/>
+
+    <bean id="imsiSOHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.IMSISOHOHandoverFailureDetailedEAService"/>
+
+    <bean id="imsiIFHOHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.IMSIIFHOHandoverFailureDetailedEAService"/>
+
+    <bean id="imsiIRATHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.IMSIIRATHandoverFailureDetailedEAService"/>
+
+    <bean id="imsiHSDSCHHandoverFailureDetailedEventAnalysisService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.wcdma.handoverfailure.eventanalysis.IMSIHSDSCHHandoverFailureDetailedEAService"/>
+
+    <bean id="summaryHomerRoamerService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.homerroamer.SummaryHomerRoamerService"/>
+
+    <bean id="summaryTerminalService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.terminal.SummaryTerminalService"/>
+    <bean id="rncKPIService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.RNCKPIService"
+            />
+
+    <bean id="nodeQuery" class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.MockNodeQuery"/>
+
+    <bean id="rncCellKPIServiceParamUtil"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.RNCCellKPIServiceParamUtil"/>
+
+    <bean id="dashboardReportsListService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.reports.DashboardReportsListService"/>
+    <bean id="biCatalogObjectSoapClient"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.reports.MockBiCatalogObjectSoapClient"/>
+    
+    <bean id="coreNetworkKPIService" parent="genericService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.network.kpi.core.CoreNetworkKPIService"/>
+
+    <bean id="summaryWCDMADrillDownService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.SummaryWCDMADrillDownService"/>
+
+    <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+
+    <bean id="cellKPIService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.CellKPIService"/>
+    <bean id="cellGroupKPIService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.CellGroupKPIService"/>
+    <bean id="cellKPIDrillDownService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.CellKPIDrillDownService"/>
+    <bean id="cellGroupKPIDrillDownService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.CellGroupKPIDrillDownService"/>
+    <bean id="rnckpiDrillDownService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.RNCKPIDrillDownService"/>
+    <bean id="rncGroupKPIDrillDownService"
+          class="com.ericsson.eniq.events.server.serviceprovider.impl.dashboard.kpi.RNCGroupKPIDrillDownService"/>
+		  
+</beans>
